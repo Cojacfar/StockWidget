@@ -1,0 +1,7 @@
+Things to do:
+
+Make it look better
+Use dictionary to store stock symbols as 'key' and their price as 'values'
+Use list comprehension to display these values as labels
+Implement matlabplot into drawing surface on left side to create historical graphs of selected stock
+
