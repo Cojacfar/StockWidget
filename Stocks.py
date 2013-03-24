@@ -14,11 +14,10 @@ class Stocks(Gtk.Window):
         self.set_border_width(10)
 
         pane = Gtk.HPaned()
-        self.add(pane)
-        self.grid = Gtk.Grid()
-        pane.add2(self.grid)
+        self.add(pane) 
         box = Gtk.Box(spacing=0)
-        self.grid.attach(box,2,0,1,1)
+        pane.add2(box)
+        self.stock_box = Gtk.VBox(spacing=0)
 
         button = Gtk.Button(None,image=Gtk.Image(stock=Gtk.STOCK_ADD))
         button.connect("clicked", self.add_stock)
@@ -28,10 +27,6 @@ class Stocks(Gtk.Window):
 
         button3 = Gtk.Button(None,image=Gtk.Image(stock=Gtk.STOCK_STOP))
         button3.connect("clicked", lambda w: Gtk.main_quit())
-        #Attach to Grid in top right corner
-        #grid.attach(button3,4,0,1,1)
-        #grid.attach_next_to(button2, button3, Gtk.PositionType.LEFT,1,1)
-        #grid.attach_next_to(button,button2,Gtk.PositionType.LEFT,1,1)
         box.pack_end(button,False,False,0)
         box.pack_end(button2,False,False,0)
         box.pack_end(button3,False,False,0)
@@ -60,10 +55,12 @@ class Stocks(Gtk.Window):
                 #I have returned a valid stock price, create
                 # a list of stock values on the screen.
                 # Add new stock to the dictionary containing
-                # all of the stocks to be displayed
+                # all of the stocks to be displayed. Then 
+                # clear out the current stocks to recreate
+                # all of the stock values to be shown
                 stock_list[entry] = stock_price
-                self.stock = Gtk.Label(entry)
-                self.grid.attach(self.stock, 1, num_of_stock, 1, 1)
+                self.stock = Gtk.Label(entry + ": " stock_price)
+                self.stock_box.pack_start(self.stock)
 
 
         print "Stock Added!"
