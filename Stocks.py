@@ -5,13 +5,19 @@ import ystockquote
 
 class Stocks(Gtk.Window):
 
-    #Using a window subclass to create GUI upon start
+    #Class variables to store a dictionary of stocks I am tracking
+    #and the corresponding number
     self.num_of_stock = 1
     stock_list = { }
-
+    #Using a window subclass and creating GUI upon initialization
     def __init__(self):
         Gtk.Window.__init__(self, title="Stock Market Watcher")
         self.set_border_width(10)
+
+        #Create ListStore to hold stock values then display
+        self.data = Gtk.ListStore(str, float)
+        self.view = Gtk.TreeView(self.data)
+
 
         pane = Gtk.HPaned()
         self.add(pane) 
@@ -52,15 +58,11 @@ class Stocks(Gtk.Window):
                 alert.run()
                 alert.destroy()
             else:
-                #I have returned a valid stock price, create
-                # a list of stock values on the screen.
-                # Add new stock to the dictionary containing
-                # all of the stocks to be displayed. Then 
-                # clear out the current stocks to recreate
-                # all of the stock values to be shown
+                #I have returned a valid stock price, add this
+                # new stock to the list widget
+
                 stock_list[entry] = stock_price
-                self.stock = Gtk.Label(entry + ": " stock_price)
-                self.stock_box.pack_start(self.stock)
+                self.data.append([entry, stock_price])
 
 
         print "Stock Added!"
