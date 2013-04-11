@@ -1,29 +1,46 @@
 #!/usr/bin/python
-from gi.repository import Gtk
+from gi.repository import Gtk, Gdk
 import ystockquote
 
 
 class Stocks(Gtk.Window):
 
-    #Class variables to store a dictionary of stocks I am tracking
-    #and the corresponding number
-    self.num_of_stock = 1
-    stock_list = { }
+    #Creating UI
+    UI_INFO = """
+    <ui>
+        <toolbar name='Toolbar'>
+            <toolitem action='Add' />
+            <toolitem action='About' />
+            <toolitem action='Exit' />
+        </toolbar>
+    </ui>
+    """
     #Using a window subclass and creating GUI upon initialization
     def __init__(self):
         Gtk.Window.__init__(self, title="Stock Market Watcher")
         self.set_border_width(10)
 
-        #Create ListStore to hold stock values then display
-        self.data = Gtk.ListStore(str, float)
-        self.view = Gtk.TreeView(self.data)
+        #Create UI
+        uimanager = Gtk.UIManager()
+        uimanager.add_ui_from_string(UI_INFO)
 
+        #Create ListStore to hold stock values then display
+        self.data = Gtk.ListStore(str, str)
+        self.data.append(["Test", "Test2"])
+        self.view = Gtk.TreeView(self.data)
+        self.text_renderer = Gtk.CellRendererText()
+        self.text_renderer.set_property("editable", True)
+        self.stock_names = Gtk.TreeViewColumn("Stocks", self.text_renderer, text=0)
+        self.stock_prices = Gtk.TreeViewColumn("Price", self.text_renderer, text=0)
+        self.view.append_column(self.stock_names)
+        self.view.append_column(self.stock_prices)
 
         pane = Gtk.HPaned()
         self.add(pane) 
         box = Gtk.Box(spacing=0)
+        pane.add2(self.view)
+        
         pane.add2(box)
-        self.stock_box = Gtk.VBox(spacing=0)
 
         button = Gtk.Button(None,image=Gtk.Image(stock=Gtk.STOCK_ADD))
         button.connect("clicked", self.add_stock)
@@ -60,9 +77,9 @@ class Stocks(Gtk.Window):
             else:
                 #I have returned a valid stock price, add this
                 # new stock to the list widget
-
-                stock_list[entry] = stock_price
                 self.data.append([entry, stock_price])
+
+
 
 
         print "Stock Added!"
